@@ -36,7 +36,6 @@ def main():
     sj_secret_key = os.getenv('SJ_SECRET_KEY')
     statistics_headhunter = get_vacancies_statistics_hh()
     statistics_superjob = get_vacancies_statistics_sj(sj_secret_key)
-    os.system('clear')
     print_statistics_table('HeadHunter Moscow', statistics_headhunter)
     print_statistics_table('SuperJob Moscow', statistics_superjob)
 
@@ -116,7 +115,7 @@ def get_vacancies_statistics(
                 count_per_page_field_name: vacancies_per_page,
             }
             if additional_request_params:
-                params += additional_request_params
+                params.update(additional_request_params)
             response = requests.get(api_method_url, headers=headers, params=params)
             response.raise_for_status()
             vacancies = response.json()[items_field_name]
