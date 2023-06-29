@@ -6,12 +6,12 @@ header = {"X-Api-App-Id": token}
 url = "https://api.superjob.ru/2.0/vacancies/"
 
 params = {
-
+    'town': 'Москва'
 }
 
-response = requests.get(url, headers=header)
+response = requests.get(url, headers=header, params=params)
 for obj in response.json()['objects']:
-    print(obj['profession'])
+    print(obj['profession'], obj['town']['title'], sep=', ')
 
 
 
