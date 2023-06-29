@@ -1,10 +1,13 @@
 import os
+import random
+
 from dotenv import load_dotenv
 import requests
 import time
 from pprint import pprint
 from tqdm import tqdm
 import numpy as np
+from terminaltables import SingleTable
 
 POPULAR_LANGUAGES = [
     'JavaScript',
@@ -26,6 +29,30 @@ SJ_API_METHOD_URL = "https://api.superjob.ru/2.0/vacancies/"
 SJ_MAX_VACANCIES_QUANTITY = 500
 SJ_VACANCIES_PER_PAGE = 100
 SJ_MOSCOW_ID = 4
+
+
+def main():
+    load_dotenv()
+    sj_secret_key = os.getenv('SJ_SECRET_KEY')
+    statistics_headhunter = get_vacancies_statistics_hh()
+    statistics_superjob = get_vacancies_statistics_sj(sj_secret_key)
+    os.system('clear')
+    print_statistics_table('HeadHunter Moscow', statistics_headhunter)
+    print_statistics_table('SuperJob Moscow', statistics_superjob)
+
+
+def print_statistics_table(site_city_name: str, statistics: dict):
+    headers = ['Programming Language', 'Vacancies Found', 'Vacancies Processed', 'Average Salary']
+    rows = []
+    for language in statistics.keys():
+        row = [language] + list(statistics[language].values())
+        rows.append(row)
+    table_title = site_city_name
+    table_instance = SingleTable([headers] + rows, table_title)
+    table_instance.justify_columns[1] = 'center'
+    table_instance.justify_columns[2] = 'center'
+    print(table_instance.table)
+    print()
 
 
 def predict_salary(salary_from, salary_to,
@@ -102,9 +129,9 @@ def get_vacancies_statistics(
                     vacancies_processed += 1
             total_salaries.append(salaries)
             time.sleep(1)
-        vacancies_by_language[language]['average_salary'] = int(np.mean([x for y in total_salaries for x in y]))
         vacancies_by_language[language]['vacancies_found'] = vacancies_found
         vacancies_by_language[language]['vacancies_processed'] = vacancies_processed
+        vacancies_by_language[language]['average_salary'] = int(np.mean([x for y in total_salaries for x in y]))
         time.sleep(requests_delay)
     return vacancies_by_language
 
@@ -135,14 +162,9 @@ def get_vacancies_statistics_sj(sj_secret_key: str, period: int = 30):
                                           salary_prediction_function=predict_rub_salary_superjob,
                                           city_id=SJ_MOSCOW_ID,
                                           period=period,
-                                          request_headers=auth_header,)
+                                          request_headers=auth_header,
+                                          requests_delay=1)
     return statistics
-
-
-def main():
-    load_dotenv()
-    sj_secret_key = os.getenv('SJ_SECRET_KEY')
-    pprint(get_vacancies_statistics_sj(sj_secret_key))
 
 
 if __name__ == "__main__":
