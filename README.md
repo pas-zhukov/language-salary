@@ -28,5 +28,9 @@ pip install -r requirements.txt
 python main.py
 ```
 
+Если всё было сделано правильно, в терминале будет подобный результат:
+![изображение](https://github.com/pas-zhukov/language-salary/assets/117192371/47c0dc42-abf0-404a-a4bc-aaf93e9be4bb)
+
+
 ## Цели проекта
 Код написан в учебных целях.
