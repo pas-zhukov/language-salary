@@ -126,7 +126,7 @@ def get_vacancies_statistics_hh(period: int = 30):
         salaries = []
         vacancies_found = 0
         vacancies_processed = 0
-        for page_number in range(int(SJ_MAX_VACANCIES_QUANTITY / SJ_VACANCIES_PER_PAGE)):
+        for page_number in range(int(HH_MAX_VACANCIES_QUANTITY / HH_VACANCIES_PER_PAGE)):
             params = {
                 'text': f'Программист {language}',
                 'area': HH_MOSCOW_ID,
