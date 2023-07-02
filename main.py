@@ -145,9 +145,9 @@ def get_vacancies_statistics_hh(period: int = 30):
                     vacancies_processed += 1
             time.sleep(1)
         vacancies_by_language[language] = {
-            'average_salary': int(np.mean(salaries)),
             'vacancies_found': vacancies_found,
-            'vacancies_processed': vacancies_processed
+            'vacancies_processed': vacancies_processed,
+            'average_salary': int(np.mean(salaries))
         }
         time.sleep(5)
     return vacancies_by_language
@@ -189,9 +189,9 @@ def get_vacancies_statistics_sj(sj_secret_key: str, period: int = 30):
                     vacancies_processed += 1
             time.sleep(1)
         vacancies_by_language[language] = {
-            'average_salary': int(np.mean(salaries)),
             'vacancies_found': vacancies_found,
-            'vacancies_processed': vacancies_processed
+            'vacancies_processed': vacancies_processed,
+            'average_salary': int(np.mean(salaries))
         }
         time.sleep(1)
     return vacancies_by_language
