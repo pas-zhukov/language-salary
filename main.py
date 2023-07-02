@@ -123,7 +123,7 @@ def get_vacancies_statistics_hh(period: int = 30):
     """
     vacancies_by_language = {key: {} for key in POPULAR_LANGUAGES}
     for language in tqdm(POPULAR_LANGUAGES):
-        total_salaries = []
+        salaries = []
         vacancies_found = 0
         vacancies_processed = 0
         for page_number in range(int(SJ_MAX_VACANCIES_QUANTITY / SJ_VACANCIES_PER_PAGE)):
@@ -138,17 +138,17 @@ def get_vacancies_statistics_hh(period: int = 30):
             response.raise_for_status()
             vacancies = response.json()['items']
             vacancies_found += len(vacancies)
-            salaries = []
             for vacancy in vacancies:
                 salary = predict_rub_salary_hh(vacancy)
                 if salary:
                     salaries.append(salary)
                     vacancies_processed += 1
-            total_salaries.append(salaries)
             time.sleep(1)
-        vacancies_by_language[language]['average_salary'] = int(np.mean([x for y in total_salaries for x in y]))
-        vacancies_by_language[language]['vacancies_found'] = vacancies_found
-        vacancies_by_language[language]['vacancies_processed'] = vacancies_processed
+        vacancies_by_language[language] = {
+            'average_salary': int(np.mean(salaries)),
+            'vacancies_found': vacancies_found,
+            'vacancies_processed': vacancies_processed
+        }
         time.sleep(5)
     return vacancies_by_language
 
@@ -166,7 +166,7 @@ def get_vacancies_statistics_sj(sj_secret_key: str, period: int = 30):
     """
     vacancies_by_language = {key: {} for key in POPULAR_LANGUAGES}
     for language in tqdm(POPULAR_LANGUAGES):
-        total_salaries = []
+        salaries = []
         vacancies_found = 0
         vacancies_processed = 0
         for page_number in range(int(SJ_MAX_VACANCIES_QUANTITY / SJ_VACANCIES_PER_PAGE)):
@@ -182,17 +182,17 @@ def get_vacancies_statistics_sj(sj_secret_key: str, period: int = 30):
             response.raise_for_status()
             vacancies = response.json()['objects']
             vacancies_found += len(vacancies)
-            salaries = []
             for vacancy in vacancies:
                 salary = predict_rub_salary_superjob(vacancy)
                 if salary:
                     salaries.append(salary)
                     vacancies_processed += 1
-            total_salaries.append(salaries)
             time.sleep(1)
-        vacancies_by_language[language]['average_salary'] = int(np.mean([x for y in total_salaries for x in y]))
-        vacancies_by_language[language]['vacancies_found'] = vacancies_found
-        vacancies_by_language[language]['vacancies_processed'] = vacancies_processed
+        vacancies_by_language[language] = {
+            'average_salary': int(np.mean(salaries)),
+            'vacancies_found': vacancies_found,
+            'vacancies_processed': vacancies_processed
+        }
         time.sleep(1)
     return vacancies_by_language
 
